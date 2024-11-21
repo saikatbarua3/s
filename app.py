@@ -47,8 +47,18 @@
 
 
 # import mysql.connector
+# import streamlit as st
+# from PIL import Image
+
 import streamlit as st
-from PIL import Image
+import pandas as pd
+
+# Load the CSV file
+data = pd.read_csv('coaches_data.csv')
+
+# Display the data
+st.write("Data from the CSV file:")
+st.dataframe(data)
 
 
 
@@ -158,7 +168,7 @@ from PIL import Image
 #     else:
 #         st.write("Failed to connect to database.")
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     main()
 
 
