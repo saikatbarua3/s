@@ -1,2 +1,5 @@
-pip install streamlit sqlite3 pandas
+streamlit
+pandas
+sqlite3
+
 
