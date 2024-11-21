@@ -1,67 +1,65 @@
 import streamlit as st
 import pandas as pd
-
-# Load the CSV file
-data = pd.read_csv('coaches_data.csv')
-
-# Display the data
-st.write("Data from the CSV file:")
-st.dataframe(data)
+from PIL import Image
 
 def main():
     st.title("Coach Profile Viewer")
-    conn = get_database_connection()
+    
+    # Replace this with the path to your CSV file
+    data_file = "coaches_data.csv"
 
-    if conn:
-        #st.write("Database connected successfully.")
-        
-        # Fetch coach names and display them in a selectbox
-        coach_names = get_coach_names(conn)
-        if coach_names:
-            selected_coach = st.selectbox("Select Coach", coach_names)
+    try:
+        # Load the CSV data
+        data = pd.read_csv(data_file)
+    except FileNotFoundError:
+        st.error("The coaches data file was not found. Please check the file path.")
+        return
+    except Exception as e:
+        st.error(f"Error loading the data: {e}")
+        return
 
-            if selected_coach:
-                # Fetch and display the coach's profile
-                coach_profile = get_coach_profile(conn, selected_coach)
-                if coach_profile:
-                    st.write(f"**{selected_coach} Profile**")
+    # Extract unique coach names
+    coach_names = data['Coach_Name'].unique().tolist()
 
-                    # Create two columns: one for the image and one for the text
-                    col1, col2 = st.columns([1, 2])
+    # Display the coach names in a selectbox
+    selected_coach = st.selectbox("Select a Coach", coach_names)
 
-                    # Display the image in the first column with width of 170px
-                    with col1:
-                        for profile in coach_profile:
-                            if profile[6]:  # Check if Picture exists
-                                image = Image.open(profile[6])
-                                st.image(image, width=170)
-                            else:
-                                st.write("No picture available.")
+    if selected_coach:
+        # Filter the data for the selected coach
+        coach_profile = data[data['Coach_Name'] == selected_coach]
 
-                    # Display the text in the second column
-                    with col2:
-                        for profile in coach_profile:
-                            st.markdown(f"**Coach Name:** {profile[1]}")
-                            st.markdown(f"**Born In:** {profile[2]}")
-                            st.markdown(f"**Age:** {profile[3]}")
-                            #st.markdown(f"**Coaching Year:** {profile[4]}")
-                            st.markdown(f"<p style='text-align: justify;'><strong>Status: {profile[5]}</strong></p>", unsafe_allow_html=True)
+        if not coach_profile.empty:
+            st.write(f"**{selected_coach} Profile**")
 
-                    # Fetch and display the coaching career highlights
-                    career_highlights = get_coaching_highlights(conn, selected_coach)
-                    if career_highlights:
-                        st.write(f"**Coaching Career Highlights of {selected_coach}:**")
-                        for highlight in career_highlights:
-                            if len(highlight) >= 2:
-                               st.markdown(f"<p style='text-align: justify;'><strong>- {highlight[0]}:</strong> {highlight[1]}</p>", unsafe_allow_html=True)
-                    else:
-                        st.write(f"No coaching career highlights found for {selected_coach}")
+            # Create two columns for image and profile details
+            col1, col2 = st.columns([1, 2])
+
+            # Display image in the first column
+            with col1:
+                if not pd.isna(coach_profile.iloc[0]['Picture']):  # Check if the picture column is not empty
+                    try:
+                        image_path = coach_profile.iloc[0]['Picture']
+                        image = Image.open(image_path)
+                        st.image(image, width=170)
+                    except FileNotFoundError:
+                        st.warning("Image file not found.")
                 else:
-                    st.write(f"No profile found for {selected_coach}")
+                    st.write("No picture available.")
+
+            # Display profile details in the second column
+            with col2:
+                st.markdown(f"**Coach Name:** {coach_profile.iloc[0]['Coach_Name']}")
+                st.markdown(f"**Born In:** {coach_profile.iloc[0]['Born_in']}")
+                st.markdown(f"**Age:** {coach_profile.iloc[0]['Age']}")
+                st.markdown(f"**Status:** {coach_profile.iloc[0]['Status']}")
+
+            # Display career highlights (optional field)
+            if 'Highlights' in coach_profile.columns and not pd.isna(coach_profile.iloc[0]['Highlights']):
+                st.write(f"**Career Highlights:** {coach_profile.iloc[0]['Highlights']}")
+            else:
+                st.write(f"No career highlights found for {selected_coach}")
         else:
-            st.write("No coach names found.")
-    else:
-        st.write("Failed to connect to database.")
+            st.warning(f"No profile information found for {selected_coach}")
 
 if __name__ == "__main__":
     main()
