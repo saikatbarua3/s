@@ -6,7 +6,7 @@ import os
 def main():
     st.title("Coach Profile Viewer")
     
-    # Replace this with the path to your CSV file
+    # Path to the CSV file (ensure it is in the same folder or adjust the path accordingly)
     data_file = "coaches_data.csv"
 
     try:
@@ -40,17 +40,16 @@ def main():
                 if not pd.isna(coach_profile.iloc[0]['Picture']):  # Check if the picture column is not empty
                     image_path = coach_profile.iloc[0]['Picture']
 
-                    # Debugging outputs for image path
-                    st.write("Image Path:", image_path)
-                    st.write("Current Working Directory:", os.getcwd())
+                    # Use absolute path for deployment
+                    full_image_path = os.path.join("assets", image_path)
 
                     try:
-                        image = Image.open(image_path)
+                        image = Image.open(full_image_path)
                         st.image(image, width=170, caption=f"{selected_coach}'s Picture")
                     except FileNotFoundError:
-                        st.warning(f"Image file not found: {image_path}")
+                        st.warning(f"Image file not found: {full_image_path}")
                     except UnidentifiedImageError:
-                        st.warning(f"Could not identify image format: {image_path}")
+                        st.warning(f"Could not identify image format: {full_image_path}")
                     except Exception as e:
                         st.error(f"Error displaying image: {e}")
                 else:
