@@ -38,7 +38,7 @@ def main():
             with col1:
                 if not pd.isna(coach_profile.iloc[0]['Picture']):  # Check if the picture column is not empty
                     try:
-                        image_path = coach_profile.iloc[0]['images']
+                        image_path = coach_profile.iloc[0]['Picture']
                         image = Image.open(image_path)
                         st.image(image, width=170)
                     except FileNotFoundError:
