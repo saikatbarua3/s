@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
+import os
 
 def main():
     st.title("Coach Profile Viewer")
@@ -37,13 +38,21 @@ def main():
             # Display image in the first column
             with col1:
                 if not pd.isna(coach_profile.iloc[0]['Picture']):  # Check if the picture column is not empty
+                    image_path = coach_profile.iloc[0]['Picture']
+
+                    # Debugging outputs for image path
+                    st.write("Image Path:", image_path)
+                    st.write("Image Exists:", os.path.exists(image_path))
+
                     try:
-                        image_path = coach_profile.iloc[0]['Picture']
                         image = Image.open(image_path)
-                        st.write("Image Path:", image_path)
-                        st.image(image, width=170)
+                        st.image(image, width=170, caption=f"{selected_coach}'s Picture")
                     except FileNotFoundError:
-                        st.warning("Image file not found.")
+                        st.warning(f"Image file not found: {image_path}")
+                    except UnidentifiedImageError:
+                        st.warning(f"Could not identify image format: {image_path}")
+                    except Exception as e:
+                        st.error(f"Error displaying image: {e}")
                 else:
                     st.write("No picture available.")
 
