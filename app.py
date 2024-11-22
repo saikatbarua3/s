@@ -40,6 +40,7 @@ def main():
                     try:
                         image_path = coach_profile.iloc[0]['Picture']
                         image = Image.open(image_path)
+                        st.write("Image Path:", image_path)
                         st.image(image, width=170)
                     except FileNotFoundError:
                         st.warning("Image file not found.")
