@@ -42,7 +42,7 @@ def main():
 
                     # Debugging outputs for image path
                     st.write("Image Path:", image_path)
-                    st.write("Current Working Directory:", os.getcwd()))
+                    st.write("Current Working Directory:", os.getcwd())
 
                     try:
                         image = Image.open(image_path)
