@@ -40,16 +40,21 @@ def main():
                 if not pd.isna(coach_profile.iloc[0]['Picture']):  # Check if the picture column is not empty
                     image_path = coach_profile.iloc[0]['Picture']
 
-                    # Use absolute path for deployment
-                    full_image_path = os.path.join("assets", image_path)
+                    # Check if 'assets/' is already in the image path
+                    if not image_path.startswith("assets/"):
+                        # If not, add 'assets/' to the path
+                        image_path = os.path.join("assets", image_path)
+
+                    # Debugging: Display the constructed path
+                    st.write(f"Full Image Path: {image_path}")
 
                     try:
-                        image = Image.open(full_image_path)
+                        image = Image.open(image_path)
                         st.image(image, width=170, caption=f"{selected_coach}'s Picture")
                     except FileNotFoundError:
-                        st.warning(f"Image file not found: {full_image_path}")
+                        st.warning(f"Image file not found: {image_path}")
                     except UnidentifiedImageError:
-                        st.warning(f"Could not identify image format: {full_image_path}")
+                        st.warning(f"Could not identify image format: {image_path}")
                     except Exception as e:
                         st.error(f"Error displaying image: {e}")
                 else:
