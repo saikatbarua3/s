@@ -67,9 +67,16 @@ def main():
                 st.markdown(f"**Age:** {coach_profile.iloc[0]['Age']}") 
                 st.markdown(f"**Status:** {coach_profile.iloc[0]['Status']}")
 
-            # Display career highlights (optional field)
+            # Display career highlights (formatted as a bullet-pointed list)
             if 'Highlights' in coach_profile.columns and not pd.isna(coach_profile.iloc[0]['Highlights']):
-                st.write(f"**Career Highlights:** {coach_profile.iloc[0]['Highlights']}")
+                highlights = coach_profile.iloc[0]['Highlights']
+                
+                # Split highlights into list items, assuming they are separated by ". " or newline
+                highlights_list = highlights.split(". ")
+                st.write("**Career Highlights:**")
+                for highlight in highlights_list:
+                    if highlight.strip():  # Avoid empty strings
+                        st.write(f"- {highlight.strip()}")
             else:
                 st.write(f"No career highlights found for {selected_coach}")
         else:
