@@ -10,8 +10,8 @@ def main():
     data_file = "coaches_data.csv"
 
     try:
-        # Load the CSV data
-        data = pd.read_csv(data_file)
+        # Load the CSV data with a specific encoding
+        data = pd.read_csv(data_file, encoding='cp1252')
     except FileNotFoundError:
         st.error("The coaches data file was not found. Please check the file path.")
         return
@@ -64,7 +64,7 @@ def main():
             with col2:
                 st.markdown(f"**Coach Name:** {coach_profile.iloc[0]['Coach_Name']}")
                 st.markdown(f"**Born In:** {coach_profile.iloc[0]['Born_in']}")
-                st.markdown(f"**Age:** {coach_profile.iloc[0]['Age']}")
+                st.markdown(f"**Age:** {coach_profile.iloc[0]['Age']}") 
                 st.markdown(f"**Status:** {coach_profile.iloc[0]['Status']}")
 
             # Display career highlights (optional field)
