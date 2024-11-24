@@ -54,11 +54,11 @@ def main():
                 image_path = coach_profile.iloc[0].get('Picture', None)
                 if image_path:
                     if not image_path.startswith("assets/"):
-                        image_path = coach_profile.iloc[0].get('Picture', None)
+                        image_path = os.path.join("assets", "images", "Abbas Ali Baig.JPG")
                     try:
                         image = Image.open(image_path)
                         st.image(image, width=170, caption=f"{selected_coach.title()}'s Picture")
-                    except FileNotFoundError:
+                    except F	ileNotFoundError:
                         st.warning(f"Image not found: {image_path}")
                     except UnidentifiedImageError:
                         st.warning(f"Invalid image format: {image_path}")
