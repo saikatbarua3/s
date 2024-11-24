@@ -58,7 +58,7 @@ def main():
                     try:
                         image = Image.open(image_path)
                         st.image(image, width=170, caption=f"{selected_coach.title()}'s Picture")
-                    except F	ileNotFoundError:
+                    except FileNotFoundError:
                         st.warning(f"Image not found: {image_path}")
                     except UnidentifiedImageError:
                         st.warning(f"Invalid image format: {image_path}")
