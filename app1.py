@@ -54,7 +54,7 @@ def main():
                 image_path = coach_profile.iloc[0].get('Picture', None)
                 if image_path:
                     if not image_path.startswith("assets/"):
-                        image_path = os.path.join("assets", "images", image_path)
+                        image_path = coach_profile.iloc[0].get('Picture', None)
                     try:
                         image = Image.open(image_path)
                         st.image(image, width=170, caption=f"{selected_coach.title()}'s Picture")
